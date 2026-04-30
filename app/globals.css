@@ -1008,6 +1008,12 @@ a {
     .nav-links.open {
         right: 0;
     }
+    
+    .nav-links .nav-cta {
+        margin-top: 20px;
+        text-align: center;
+        display: block;
+    }
 
     .hamburger {
         display: flex;
