@@ -57,6 +57,7 @@ function initSite() {
     initTilt();
     initMarquee();
     initHamburger();
+    initMobileButtons();
 }
 
 // ─── Logo fica azul conforme o scroll ────────────────────────
@@ -109,6 +110,15 @@ function initNav() {
 
 // ─── Custom Cursor ───────────────────────────────────────────
 function initCursor() {
+    // Desativa cursor customizado em mobile
+    if (isMobile) {
+        const ring = document.getElementById('cursorRing');
+        const dot  = document.getElementById('cursorDot');
+        if (ring) ring.style.display = 'none';
+        if (dot) dot.style.display = 'none';
+        return;
+    }
+
     const ring = document.getElementById('cursorRing');
     const dot  = document.getElementById('cursorDot');
     if (!ring || !dot) return;
@@ -411,4 +421,40 @@ function initHamburger() {
     });
     menuBackdrop.addEventListener('click', close);
     navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', close));
+}
+
+// ─── Mobile Button Fix ───────────────────────────────────────
+function initMobileButtons() {
+    if (!isMobile) return;
+    
+    // Garante que todos os links com classe .btn funcionem em mobile
+    document.querySelectorAll('.btn').forEach(btn => {
+        // Remove qualquer transform que possa estar interferindo
+        btn.style.transform = 'none';
+        
+        // Adiciona evento de toque explícito
+        btn.addEventListener('touchend', function(e) {
+            const href = this.getAttribute('href');
+            if (href && href !== '#') {
+                // Pequeno delay para feedback visual
+                setTimeout(() => {
+                    if (this.getAttribute('target') === '_blank') {
+                        window.open(href, '_blank', 'noopener,noreferrer');
+                    } else {
+                        window.location.href = href;
+                    }
+                }, 100);
+            }
+        }, { passive: true });
+    });
+    
+    // Garante que service-cards não bloqueiem cliques nos botões
+    document.querySelectorAll('.service-card').forEach(card => {
+        card.style.transform = 'none';
+        const btn = card.querySelector('.btn');
+        if (btn) {
+            btn.style.position = 'relative';
+            btn.style.zIndex = '100';
+        }
+    });
 }

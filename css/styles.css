@@ -28,6 +28,22 @@ body {
     cursor: none;
 }
 
+/* Restaura cursor padrão em dispositivos touch/mobile */
+@media (max-width: 768px), (hover: none), (pointer: coarse) {
+    body {
+        cursor: auto;
+    }
+    
+    .cursor-ring,
+    .cursor-dot {
+        display: none !important;
+    }
+    
+    a, button, .btn {
+        cursor: pointer;
+    }
+}
+
 /* ─── Noise Overlay ─── */
 body::before {
     content: '';
