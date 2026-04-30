@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import ClientScripts from "./components/ClientScripts";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -30,7 +31,10 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body className="bg-[#080F1C]">{children}</body>
+      <body className="bg-[#080F1C]">
+        <ClientScripts />
+        {children}
+      </body>
     </html>
   );
 }
