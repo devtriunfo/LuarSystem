@@ -199,6 +199,38 @@ a {
     height: 45px;
 }
 
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.admin-btn {
+    padding: 10px 20px;
+    background: rgba(106, 168, 200, 0.15);
+    border: 1px solid rgba(106, 168, 200, 0.3);
+    color: var(--cyan);
+    font-weight: 600;
+    font-size: 13px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.admin-btn:hover {
+    background: rgba(106, 168, 200, 0.25);
+    border-color: var(--cyan);
+    transform: translateY(-2px);
+}
+
+.admin-btn::before {
+    content: '⚙';
+    font-size: 14px;
+}
+
 .logo-text {
     background: var(--gradient);
     -webkit-background-clip: text;
@@ -986,6 +1018,15 @@ a {
 
     .section {
         padding: 100px 0;
+    }
+
+    .nav-left {
+        gap: 12px;
+    }
+
+    .admin-btn {
+        padding: 8px 14px;
+        font-size: 12px;
     }
 
     .nav-links {
