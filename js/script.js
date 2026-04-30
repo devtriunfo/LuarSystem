@@ -446,19 +446,35 @@ function initMobileButtons() {
         const newBtn = btn.cloneNode(true);
         btn.parentNode.replaceChild(newBtn, btn);
         
-        // Adiciona evento de clique direto com capture para garantir que funcione
-        newBtn.addEventListener('click', function(e) {
-            const href = this.getAttribute('href');
-            if (href && href !== '#') {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                if (this.getAttribute('target') === '_blank') {
+        // Função para navegar
+        function navigateToHref(element) {
+            const href = element.getAttribute('href');
+            if (!href) return;
+            
+            // Link de âncora interna (ex: #contato)
+            if (href.startsWith('#') && href.length > 1) {
+                const targetElement = document.querySelector(href);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                }
+                return;
+            }
+            
+            // Link externo ou absoluto
+            if (href !== '#') {
+                if (element.getAttribute('target') === '_blank') {
                     window.open(href, '_blank', 'noopener,noreferrer');
                 } else {
                     window.location.href = href;
                 }
             }
+        }
+        
+        // Adiciona evento de clique direto com capture para garantir que funcione
+        newBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            navigateToHref(this);
         }, { capture: true });
         
         // Adiciona evento de toque como backup
@@ -468,16 +484,8 @@ function initMobileButtons() {
         
         newBtn.addEventListener('touchend', function(e) {
             this.style.opacity = '1';
-            const href = this.getAttribute('href');
-            if (href && href !== '#') {
-                e.preventDefault();
-                
-                if (this.getAttribute('target') === '_blank') {
-                    window.open(href, '_blank', 'noopener,noreferrer');
-                } else {
-                    window.location.href = href;
-                }
-            }
+            e.preventDefault();
+            navigateToHref(this);
         }, { passive: false });
     });
     
@@ -490,5 +498,11 @@ function initMobileButtons() {
     // Desabilita qualquer overlay que possa estar bloqueando
     document.querySelectorAll('.hero-overlay, .grid-overlay').forEach(overlay => {
         overlay.style.pointerEvents = 'none';
+    });
+    
+    // Também aplica para todos os outros links e botões
+    document.querySelectorAll('a:not(.btn), button').forEach((el) => {
+        el.style.pointerEvents = 'auto';
+        el.style.touchAction = 'manipulation';
     });
 }
