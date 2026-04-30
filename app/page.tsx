@@ -15,19 +15,22 @@ export default async function Home() {
       {/* Navigation */}
       <nav className="navbar" role="navigation" aria-label="Menu Principal">
         <div className="container nav-container">
-          <div className="nav-left">
-            <Link href="/admin" className="admin-btn">
-              Admin
-            </Link>
-            <Link href="/" className="logo">
-              <img src="/logo.png" alt="LuarSystem Logo" />
-            </Link>
-          </div>
+          <Link href="/admin" className="admin-btn admin-btn-desktop">
+            Admin
+          </Link>
+          <Link href="/" className="logo">
+            <img src="/logo.png" alt="LuarSystem Logo" />
+          </Link>
           <ul className="nav-links" id="navLinks">
             <li><a href="#servicos">Serviços</a></li>
             <li><a href="#portfolio">Portfolio</a></li>
             <li><a href="#equipe">Equipe</a></li>
             <li><a href="#contato">Contato</a></li>
+            <li className="admin-menu-item">
+              <Link href="/admin" className="admin-btn-mobile">
+                Admin
+              </Link>
+            </li>
           </ul>
           <button className="hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false">
             <span></span>

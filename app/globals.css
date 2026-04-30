@@ -199,13 +199,8 @@ a {
     height: 45px;
 }
 
-.nav-left {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.admin-btn {
+/* Admin Button - Desktop */
+.admin-btn-desktop {
     padding: 10px 20px;
     background: rgba(106, 168, 200, 0.15);
     border: 1px solid rgba(106, 168, 200, 0.3);
@@ -218,17 +213,52 @@ a {
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    position: absolute;
+    left: 60px;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
-.admin-btn:hover {
+.admin-btn-desktop:hover {
     background: rgba(106, 168, 200, 0.25);
     border-color: var(--cyan);
-    transform: translateY(-2px);
+    transform: translateY(calc(-50% - 2px));
 }
 
-.admin-btn::before {
+.admin-btn-desktop::before {
     content: '⚙';
     font-size: 14px;
+}
+
+/* Admin Button - Mobile (dentro do menu hamburger) */
+.admin-menu-item {
+    display: none;
+}
+
+.admin-btn-mobile {
+    padding: 14px 32px;
+    background: var(--gradient);
+    color: var(--black);
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 50px;
+    transition: box-shadow 0.4s ease, transform 0.3s ease;
+    box-shadow: 0 8px 30px rgba(106, 168, 200, 0.25);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.admin-btn-mobile::before {
+    content: '⚙';
+    font-size: 14px;
+}
+
+.admin-btn-mobile:hover {
+    box-shadow: 0 12px 45px rgba(106, 168, 200, 0.4);
+    transform: translateY(-2px);
 }
 
 .logo-text {
@@ -1020,13 +1050,16 @@ a {
         padding: 100px 0;
     }
 
-    .nav-left {
-        gap: 12px;
+    /* Esconde botão Admin desktop em mobile */
+    .admin-btn-desktop {
+        display: none;
     }
-
-    .admin-btn {
-        padding: 8px 14px;
-        font-size: 12px;
+    
+    /* Mostra botão Admin no menu hamburger */
+    .admin-menu-item {
+        display: block;
+        margin-top: 20px;
+        text-align: center;
     }
 
     .nav-links {
@@ -1048,12 +1081,6 @@ a {
 
     .nav-links.open {
         right: 0;
-    }
-    
-    .nav-links .nav-cta {
-        margin-top: 20px;
-        text-align: center;
-        display: block;
     }
 
     .hamburger {
