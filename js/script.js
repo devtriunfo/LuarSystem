@@ -1,20 +1,26 @@
 // ─── GSAP + ScrollTrigger ───────────────────────────────────
 gsap.registerPlugin(ScrollTrigger);
 
-// ─── Lenis Smooth Scroll ─────────────────────────────────────
-const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+// ─── Detecta Mobile ─────────────────────────────────────────
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                 window.innerWidth < 768 || 
+                 ('ontouchstart' in window) || 
+                 (navigator.maxTouchPoints > 0);
 
-const lenis = new Lenis({
-    duration: 1.2,
-    easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    smoothWheel: true,
-    touchMultiplier: isMobile ? 1.5 : 2,
-    smoothTouch: false, // Desativa smooth scroll no touch para melhor compatibilidade
-});
+// ─── Lenis Smooth Scroll (apenas desktop) ────────────────────
+let lenis = null;
 
-lenis.on('scroll', ScrollTrigger.update);
-gsap.ticker.add(time => lenis.raf(time * 1000));
-gsap.ticker.lagSmoothing(0);
+if (!isMobile) {
+    lenis = new Lenis({
+        duration: 1.2,
+        easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+    });
+
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(time => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
+}
 
 // ─── Preloader ───────────────────────────────────────────────
 const preloaderEl = document.getElementById('preloader');
@@ -428,33 +434,61 @@ function initMobileButtons() {
     if (!isMobile) return;
     
     // Garante que todos os links com classe .btn funcionem em mobile
-    document.querySelectorAll('.btn').forEach(btn => {
+    document.querySelectorAll('.btn').forEach((btn) => {
         // Remove qualquer transform que possa estar interferindo
         btn.style.transform = 'none';
+        btn.style.webkitTransform = 'none';
+        btn.style.pointerEvents = 'auto';
+        btn.style.position = 'relative';
+        btn.style.zIndex = '9999';
         
-        // Adiciona evento de toque explícito
-        btn.addEventListener('touchend', function(e) {
+        // Remove event listeners que podem estar interferindo (clona o elemento)
+        const newBtn = btn.cloneNode(true);
+        btn.parentNode.replaceChild(newBtn, btn);
+        
+        // Adiciona evento de clique direto com capture para garantir que funcione
+        newBtn.addEventListener('click', function(e) {
             const href = this.getAttribute('href');
             if (href && href !== '#') {
-                // Pequeno delay para feedback visual
-                setTimeout(() => {
-                    if (this.getAttribute('target') === '_blank') {
-                        window.open(href, '_blank', 'noopener,noreferrer');
-                    } else {
-                        window.location.href = href;
-                    }
-                }, 100);
+                e.preventDefault();
+                e.stopPropagation();
+                
+                if (this.getAttribute('target') === '_blank') {
+                    window.open(href, '_blank', 'noopener,noreferrer');
+                } else {
+                    window.location.href = href;
+                }
             }
+        }, { capture: true });
+        
+        // Adiciona evento de toque como backup
+        newBtn.addEventListener('touchstart', function() {
+            this.style.opacity = '0.8';
         }, { passive: true });
+        
+        newBtn.addEventListener('touchend', function(e) {
+            this.style.opacity = '1';
+            const href = this.getAttribute('href');
+            if (href && href !== '#') {
+                e.preventDefault();
+                
+                if (this.getAttribute('target') === '_blank') {
+                    window.open(href, '_blank', 'noopener,noreferrer');
+                } else {
+                    window.location.href = href;
+                }
+            }
+        }, { passive: false });
     });
     
     // Garante que service-cards não bloqueiem cliques nos botões
     document.querySelectorAll('.service-card').forEach(card => {
         card.style.transform = 'none';
-        const btn = card.querySelector('.btn');
-        if (btn) {
-            btn.style.position = 'relative';
-            btn.style.zIndex = '100';
-        }
+        card.style.webkitTransform = 'none';
+    });
+    
+    // Desabilita qualquer overlay que possa estar bloqueando
+    document.querySelectorAll('.hero-overlay, .grid-overlay').forEach(overlay => {
+        overlay.style.pointerEvents = 'none';
     });
 }

@@ -41,6 +41,22 @@ body {
     
     a, button, .btn {
         cursor: pointer;
+        -webkit-tap-highlight-color: rgba(106, 168, 200, 0.3);
+    }
+    
+    /* Força todos os botões a serem clicáveis em mobile */
+    .btn {
+        pointer-events: auto !important;
+        touch-action: manipulation !important;
+        position: relative !important;
+        z-index: 9999 !important;
+        -webkit-transform: none !important;
+        transform: none !important;
+    }
+    
+    /* Desativa animações GSAP que podem interferir */
+    .btn, .service-card, .cta-content {
+        will-change: auto !important;
     }
 }
 
@@ -874,6 +890,11 @@ nav.main-nav.scrolled {
     opacity: 0;
 }
 
+.cta-content .btn {
+    position: relative;
+    z-index: 100;
+}
+
 .cta h2 {
     font-family: 'Syne', sans-serif;
     font-size: clamp(36px, 5.5vw, 66px);
@@ -1011,7 +1032,7 @@ footer {
     }
 }
 
-/* ─── Responsive 768px (mobile) ─── */
+/* ─��─ Responsive 768px (mobile) ─── */
 @media (max-width: 768px) {
     body { cursor: auto; }
 
@@ -1110,12 +1131,27 @@ footer {
     }
 
     .service-card .btn {
-        opacity: 1;
+        opacity: 1 !important;
         width: 100%;
-        pointer-events: auto;
+        pointer-events: auto !important;
         touch-action: manipulation;
         -webkit-tap-highlight-color: rgba(106, 168, 200, 0.3);
         cursor: pointer;
+        position: relative;
+        z-index: 100;
+    }
+    
+    /* Garantir que pseudo-elementos não bloqueiem cliques */
+    .service-card::before,
+    .service-card::after {
+        pointer-events: none !important;
+        z-index: 0;
+    }
+    
+    /* Garantir que o card não bloqueie o botão */
+    .service-card {
+        transform: none !important;
+        -webkit-transform: none !important;
     }
 
     .projects-grid { grid-template-columns: 1fr; }
